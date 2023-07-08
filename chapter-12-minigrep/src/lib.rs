@@ -8,15 +8,41 @@ pub struct Config  {
     pub ignore_case: bool
 }
 
+//Option 1
+// impl Config {
+//     pub fn build (args: &Vec<String>) -> Result<Config, &str> { //implementing a constuctor
+//         if args.len() <3 {
+//             return Err("Not enough arguments!");
+//         }
+
+//         return Ok(Config {
+//             query: args[1].to_string(), 
+//             filename: args[2].to_string(), 
+//             ignore_case: env::var("IGNORE_CASE").is_ok()
+//         })
+//     }
+// }
+
+// Option 2
 impl Config {
-    pub fn build (args: &Vec<String>) -> Result<Config, &str> { //implementing a constuctor
-        if args.len() <3 {
-            return Err("Not enough arguments!");
-        }
+    pub fn build (mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> { 
+        //Here, instead of handling a vector with vector-based logic, checking its length etc., we are treating an iterator, using iterator-based methods and iterator methods.
+
+        args.next(); //moving the iterator once forward - the first argument is the name of the program, which we want to ignore. 
+
+        let query: String = match args.next() {
+            Some(qr) => qr,
+            None => return Err("No query specified: What do you want to search?")
+        };
+
+        let filename: String = match args.next() {
+            Some(f_name) => f_name,
+            None => return Err("No filename included: Where do you want to search?")
+        };
 
         return Ok(Config {
-            query: args[1].to_string(), 
-            filename: args[2].to_string(), 
+            query,
+            filename, 
             ignore_case: env::var("IGNORE_CASE").is_ok()
         })
     }
@@ -48,7 +74,7 @@ fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 
     // return results;
 
-    //2. Using map
+    //2. Using filer()
     return contents
         .lines()
         .filter(|line| {
