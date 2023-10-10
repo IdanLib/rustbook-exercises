@@ -25,7 +25,7 @@ fn main() {
     post.add_text("Finally, I ate a human child. "); 
 
     post.approve(); // Post now in Published
-    assert_eq!("I ate a salad for breakfast. I also had coffee.", post.content())
+    assert_eq!("I ate a salad for breakfast. I also had coffee. Finally, I ate a human child. ", post.content())
 
 //  Ver 2 - with types
     // post.add_text("I ate a salad for lunch today"); 

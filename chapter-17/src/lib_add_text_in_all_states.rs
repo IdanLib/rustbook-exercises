@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 pub struct Post {
     state: Option<Box<dyn State>>,
     content: String
@@ -15,12 +13,7 @@ impl Post {
 
     // This should only add text when in Draft mode - rely on trait object
     pub fn add_text(&mut self, text: &str) {
-        if let Some(s) = self.state.take() {
-            match s.deref() {
-                Draft => self.content.push_str(text),
-                _ => return ()
-            }
-        }
+        self.content.push_str(text);
     }
 
     pub fn content(&self) -> &str {
